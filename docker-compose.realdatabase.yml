@@ -1,0 +1,22 @@
+services:
+  real-database:
+    image: postgres:${POSTGRES_CLIENT_VERSION:-18}
+    container_name: central-sms-real-database
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${REAL_DATABASE_PASSWORD:?Set REAL_DATABASE_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:${REAL_DATABASE_PORT:-56432}:5432"
+    volumes:
+      - real_database_data:/var/lib/postgresql
+      - ./initial_db:/initial_db:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  real_database_data:

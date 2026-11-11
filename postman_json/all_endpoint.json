@@ -1,0 +1,148 @@
+{
+  "info": {
+    "name": "Central SMS DR Manager",
+    "description": "Postman collection for the Central SMS disaster recovery manager API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://127.0.0.1:8080" },
+    { "key": "resourceKey", "value": "identity-production" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Liveness",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/health/live" }
+        },
+        {
+          "name": "Readiness",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/health/ready" }
+        }
+      ]
+    },
+    {
+      "name": "Resources",
+      "item": [
+        {
+          "name": "List resources",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/resources" }
+        },
+        {
+          "name": "Create resource",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resource_key\": \"identity-production\",\n  \"display_name\": \"Identity PostgreSQL\",\n  \"environment\": \"production\",\n  \"connection_ref\": \"secret://identity/production\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/v1/resources"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Policies",
+      "item": [
+        {
+          "name": "Get resource policy",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/resources/{{resourceKey}}/policy" }
+        },
+        {
+          "name": "Update resource policy",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rpo_seconds\": 300,\n  \"rto_seconds\": 900,\n  \"retention_days\": 30,\n  \"full_backup_cron\": \"*/5 * * * *\",\n  \"differential_backup_cron\": \"*/2 * * * *\",\n  \"wal_archiving_required\": true,\n  \"restore_test_cron\": \"0 2 * * *\",\n  \"enabled\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/v1/resources/{{resourceKey}}/policy"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "Create full backup job",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"backup\",\n  \"backup_type\": \"full\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/v1/resources/{{resourceKey}}/jobs"
+          }
+        },
+        {
+          "name": "Create differential backup job",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"backup\",\n  \"backup_type\": \"differential\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/v1/resources/{{resourceKey}}/jobs"
+          }
+        },
+        {
+          "name": "Create logical backup job",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"backup\",\n  \"backup_type\": \"logical\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/v1/resources/{{resourceKey}}/jobs"
+          }
+        },
+        {
+          "name": "Create restore-test job",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"restore_test\",\n  \"backup_type\": \"logical\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{baseUrl}}/api/v1/resources/{{resourceKey}}/jobs"
+          }
+        },
+        {
+          "name": "List jobs",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/jobs" }
+        }
+      ]
+    },
+    {
+      "name": "Results",
+      "item": [
+        {
+          "name": "List backup artifacts",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/artifacts" }
+        },
+        {
+          "name": "List restore tests",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/restore-tests" }
+        },
+        {
+          "name": "List audit events",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/v1/audit-events" }
+        }
+      ]
+    }
+  ]
+}
