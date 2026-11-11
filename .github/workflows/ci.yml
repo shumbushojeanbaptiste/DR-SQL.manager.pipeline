@@ -32,7 +32,7 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/central-sms-dr-manager:${{ github.sha }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/central-sms-dr-manager:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/central-dr-manager:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/central-dr-manager:latest
           build-args: |
             POSTGRES_CLIENT_VERSION=18
