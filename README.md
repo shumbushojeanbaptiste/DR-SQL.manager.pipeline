@@ -273,31 +273,25 @@ Schema changes use migration files in `migrations/`. Add new migrations with inc
 
 The GitHub workflow `.github/workflows/ci.yml` builds images when commits are pushed to `main` or when the workflow is run manually.
 
-In GitHub repository settings, create Actions secret:
+In GitHub repository settings, create these Actions secrets:
 
 ```text
-Name:  DOCKERHUB_TOKEN
-Value: <Docker Hub access token>
-```
-
-Docker Hub username is:
-
-```text
-0788644687
+DOCKERHUB_USERNAME=<Docker Hub username>
+DOCKERHUB_TOKEN=<Docker Hub access token with read and write access>
 ```
 
 The workflow publishes:
 
 ```text
-0788644687/central-sms-dr-manager:<git-commit-sha>
-0788644687/central-sms-dr-manager:latest
+<DOCKERHUB_USERNAME>/central-sms-dr-manager:<git-commit-sha>
+<DOCKERHUB_USERNAME>/central-sms-dr-manager:latest
 ```
 
 Login locally, when needed:
 
 ```sh
-docker login -u 0788644687
-docker pull 0788644687/central-sms-dr-manager:latest
+docker login -u <DOCKERHUB_USERNAME>
+docker pull <DOCKERHUB_USERNAME>/central-sms-dr-manager:latest
 ```
 
 Do not write the Docker Hub password or token into `.env` or GitHub Actions source.
