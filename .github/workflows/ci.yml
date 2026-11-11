@@ -19,7 +19,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: 0788644687
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up Docker Buildx
@@ -32,7 +32,7 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            0788644687/central-dr-manager:${{ github.sha }}
-            0788644687/central-dr-manager:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/central-sms-dr-manager:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/central-sms-dr-manager:latest
           build-args: |
             POSTGRES_CLIENT_VERSION=18
